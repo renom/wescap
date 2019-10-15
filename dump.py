@@ -46,12 +46,11 @@ replacements = {args.host: 'host'} if args.host is not None else {}
 if quiet == True and not output:
     sys.exit("The quiet mode requires an output file.")
 
-args = (tshark, '-E', 'separator=,', '-i', interface, '-T', 'fields',
+cmd = (tshark, '-l', '-E', 'separator=,', '-i', interface, '-T', 'fields',
         '-e', 'ip.src', '-e', 'tcp.srcport', '-e', 'ip.dst',
         '-e', 'tcp.dstport', '-e', 'data.data',
-        '-Y', '"'+displayFilter+'"')
-cmd = ' '.join(args)
-p = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, universal_newlines=True, bufsize=10000000)
+        '-Y', displayFilter)
+p = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=STDOUT, universal_newlines=True, bufsize=1)
 
 if output:
     file = open(file, "w")
