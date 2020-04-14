@@ -38,7 +38,16 @@ tshark = args.tshark
 interface = args.interface
 quiet = args.quiet
 expand = args.expand
-displayFilter = ' or '.join(['tcp.srcport == '+str(port)+' or tcp.dstport == '+str(port) for port in args.ports])
+portsCount = len(args.ports)
+portsFilter = ' or '.join(['tcp.srcport == '+str(port)+' or tcp.dstport == '+str(port) for port in args.ports])
+nonEmptyFilter = 'data.len > 0'
+displayFilter = ''
+if portsCount > 1:
+    displayFilter = nonEmptyFilter + ' and (' + portsFilter + ')'
+elif portsCount == 1:
+    displayFilter = nonEmptyFilter + ' and ' + portsFilter
+else:
+    displayFilter = nonEmptyFilter
 file = args.output
 output = file is not None
 replacements = {args.host: 'host'} if args.host is not None else {}

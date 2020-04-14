@@ -71,7 +71,8 @@ class Decoder:
             
             if size == bufLength:
                 data = Decoder.decompress(buffer).strip()
-                packets.append(Packet(src, dst, data))
+                if len(data) > 0:
+                    packets.append(Packet(src, dst, data))
                 if hasBuffer:
                     self.clearBuffer()
             elif size < bufLength:
